@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f14">
+<title>Trader Entry Checklist</title>
+<style>
+:root{
+  --bg:#f4f6f8;--card:#fff;--text:#17202a;--muted:#6b7280;--border:#d9dee5;
+  --accent:#22c55e;--accent2:#16a34a;--danger:#ef4444;--input:#fff;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+body.dark{
+  --bg:#090d12;--card:#111820;--text:#f3f4f6;--muted:#9ca3af;--border:#26303b;
+  --accent:#39e75f;--accent2:#22c55e;--danger:#ff5b5b;--input:#0c1219;
+  --shadow:0 12px 35px rgba(0,0,0,.30);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;transition:.2s}
+.container{max-width:1050px;margin:auto;padding:25px 16px 50px}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+h1{margin:0;font-size:27px}.subtitle{color:var(--muted);margin-top:5px}
+button{border:1px solid var(--border);background:var(--card);color:var(--text);padding:10px 14px;border-radius:9px;cursor:pointer;font-weight:600}
+button:hover{filter:brightness(1.05)}
+.primary{background:var(--accent);border-color:var(--accent);color:#07110a}
+.danger{color:var(--danger)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow)}
+.section-title{font-size:18px;font-weight:750;margin-bottom:15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:9px;background:var(--input);color:var(--text);outline:none;font-size:14px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:90px;resize:vertical}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.check{display:flex;align-items:center;gap:9px;padding:11px;border:1px solid var(--border);border-radius:9px}
+.check input{width:auto}
+.options{display:flex;flex-wrap:wrap;gap:9px}
+.option{padding:9px 12px;border:1px solid var(--border);border-radius:9px;cursor:pointer}
+.option input{display:none}
+.option:has(input:checked){background:var(--accent);border-color:var(--accent);color:#07110a;font-weight:700}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.warning{display:none;padding:11px 13px;border-radius:9px;background:#ef444420;color:var(--danger);margin-top:10px;font-weight:650}
+.history-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:11px 8px;border-bottom:1px solid var(--border);text-align:left}
+th{color:var(--muted)}
+.empty{color:var(--muted);text-align:center;padding:25px}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.good{background:#22c55e22;color:var(--accent2)} .bad{background:#ef444422;color:var(--danger)}
+.small{font-size:12px;color:var(--muted)}
+@media(max-width:700px){
+ .grid,.checks{grid-template-columns:1fr}
+ header{align-items:flex-start}.history-wrap{overflow-x:auto}
+ table{min-width:800px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div>
+    <h1>📈 Trader Entry Checklist</h1>
+    <div class="subtitle">Checklist antes de tomar una entrada • disciplina primero</div>
+  </div>
+  <button id="themeBtn" onclick="toggleTheme()">🌙 Oscuro</button>
+</header>
+
+<div class="card">
+  <div class="section-title">1. Datos de la operación</div>
+  <div class="grid">
+    <div class="field"><label>Fecha y hora</label><input id="datetime" type="datetime-local"></div>
+    <div class="field"><label>Instrumento</label>
+      <select id="instrument"><option>XAUUSD (Oro)</option><option>NAS100</option></select>
+    </div>
+    <div class="field"><label>Dirección</label>
+      <select id="direction"><option>BUY / Compra</option><option>SELL / Venta</option></select>
+    </div>
+    <div class="field"><label>Temporalidad</label>
+      <select id="tf"><option>1M</option><option>5M</option><option>15M</option><option>1H</option><option>4H</option><option>Otra</option></select>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-title">2. Confirmaciones técnicas</div>
+  <div class="checks">
+    <label class="check"><input id="trend" type="checkbox"> Línea de tendencia válida</label>
+    <label class="check"><input id="structure" type="checkbox"> Estructura de mercado clara</label>
+    <label class="check"><input id="pattern" type="checkbox"> Patrón M o W confirmado</label>
+    <label class="check"><input id="level" type="checkbox"> Nivel / zona importante</label>
+    <label class="check"><input id="candle" type="checkbox"> Confirmación de vela</label>
+    <label class="check"><input id="session" type="checkbox"> Estoy dentro de mi horario</label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-title">3. Stop Loss y riesgo</div>
+  <div class="grid">
+    <div class="field"><label>SL en puntos</label><input id="sl" type="number" min="0" step="0.1" placeholder="Ej.: 12"></div>
+    <div class="field"><label>Riesgo de la operación (%)</label><input id="risk" type="number" min="0" step="0.1" max="1" placeholder="Máximo 1%"></div>
+  </div>
+  <div id="slWarning" class="warning">⚠️ El SL debe estar entre 10 y 15 puntos.</div>
+  <div id="riskWarning" class="warning">🛑 El riesgo máximo permitido es 1%.</div>
+</div>
+
+<div class="card">
+  <div class="section-title">4. Volatilidad</div>
+  <div class="options">
+    <label class="option"><input name="vol" value="Baja" type="radio"> Baja</label>
+    <label class="option"><input name="vol" value="Normal" type="radio"> Normal</label>
+    <label class="option"><input name="vol" value="Alta" type="radio"> Alta</label>
+    <label class="option"><input name="vol" value="Extrema" type="radio"> Extrema</label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-title">5. Estado emocional</div>
+  <div class="options">
+    <label class="option"><input name="emotion" value="Calmo" type="radio"> 😌 Calmo</label>
+    <label class="option"><input name="emotion" value="Enfocado" type="radio"> 🎯 Enfocado</label>
+    <label class="option"><input name="emotion" value="Ansioso" type="radio"> 😟 Ansioso</label>
+    <label class="option"><input name="emotion" value="FOMO" type="radio"> 😰 FOMO</label>
+    <label class="option"><input name="emotion" value="Venganza" type="radio"> 😡 Venganza</label>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-title">6. Antes de entrar</div>
+  <div class="checks">
+    <label class="check"><input id="news" type="checkbox"> Revisé noticias/eventos de alto impacto</label>
+    <label class="check"><input id="rr" type="checkbox"> La relación riesgo/beneficio es aceptable</label>
+    <label class="check"><input id="revenge" type="checkbox"> No estoy intentando recuperar una pérdida</label>
+    <label class="check"><input id="plan" type="checkbox"> Tengo claro dónde salir si me equivoco</label>
+  </div>
+  <div class="field" style="margin-top:14px"><label>Notas de la entrada</label><textarea id="notes" placeholder="¿Por qué voy a tomar esta entrada? ¿Qué invalida la idea?"></textarea></div>
+</div>
+
+<div class="card">
+  <div class="actions">
+    <button class="primary" onclick="saveTrade()">💾 Guardar entrada</button>
+    <button onclick="clearForm()">↺ Limpiar</button>
+    <button onclick="exportData()">⬇ Exportar historial</button>
+  </div>
+  <div id="saveWarning" class="warning"></div>
+</div>
+
+<div class="card">
+  <div class="history-head">
+    <div>
+      <div class="section-title" style="margin:0">📚 Historial de entradas</div>
+      <div class="small">Se guarda automáticamente en este navegador.</div>
+    </div>
+    <button class="danger" onclick="clearHistory()">Borrar historial</button>
+  </div>
+  <div class="history-wrap" style="margin-top:15px">
+    <table>
+      <thead><tr><th>Fecha</th><th>Instrumento</th><th>Dir.</th><th>Setup</th><th>SL</th><th>Riesgo</th><th>Volatilidad</th><th>Emoción</th><th></th></tr></thead>
+      <tbody id="history"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function nowLocal(){
+  const d=new Date(), off=d.getTimezoneOffset(), local=new Date(d.getTime()-off*60000);
+  return local.toISOString().slice(0,16);
+}
+$('datetime').value=nowLocal();
+
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const dark=document.body.classList.contains('dark');
+  localStorage.setItem('theme',dark?'dark':'light');
+  $('themeBtn').textContent=dark?'☀️ Claro':'🌙 Oscuro';
+}
+if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');$('themeBtn').textContent='☀️ Claro'}
+
+function radio(name){
+  const x=document.querySelector(`input[name="${name}"]:checked`);
+  return x?x.value:'';
+}
+function checks(){
+  return ['trend','structure','pattern','level','candle','session','news','rr','revenge','plan']
+    .filter(id=>$(id).checked);
+}
+function validate(){
+  const sl=parseFloat($('sl').value), risk=parseFloat($('risk').value);
+  $('slWarning').style.display=(isNaN(sl)||sl<10||sl>15)?'block':'none';
+  $('riskWarning').style.display=(isNaN(risk)||risk<=0||risk>1)?'block':'none';
+  return !isNaN(sl)&&sl>=10&&sl<=15&&!isNaN(risk)&&risk>0&&risk<=1;
+}
+$('sl').addEventListener('input',validate); $('risk').addEventListener('input',validate);
+
+function saveTrade(){
+  if(!validate()){
+    $('saveWarning').textContent='⚠️ Revisá el SL (10–15 puntos) y el riesgo (máximo 1%).';
+    $('saveWarning').style.display='block'; return;
+  }
+  const checked=checks();
+  if(checked.length<4){
+    $('saveWarning').textContent='⚠️ Antes de entrar, completá al menos 4 confirmaciones técnicas.';
+    $('saveWarning').style.display='block'; return;
+  }
+  const trade={
+    id:Date.now(), datetime:$('datetime').value, instrument:$('instrument').value,
+    direction:$('direction').value, tf:$('tf').value, sl:$('sl').value, risk:$('risk').value,
+    volatility:radio('vol'), emotion:radio('emotion'), checks:checked, notes:$('notes').value
+  };
+  const data=JSON.parse(localStorage.getItem('trades')||'[]'); data.unshift(trade);
+  localStorage.setItem('trades',JSON.stringify(data));
+  $('saveWarning').style.display='none'; renderHistory();
+  alert('✅ Entrada guardada correctamente.');
+}
+function renderHistory(){
+  const data=JSON.parse(localStorage.getItem('trades')||'[]');
+  const tbody=$('history'); tbody.innerHTML='';
+  if(!data.length){tbody.innerHTML='<tr><td colspan="9" class="empty">Todavía no hay entradas guardadas.</td></tr>';return}
+  data.forEach(t=>{
+    const setup=(t.checks.includes('trend')?'T ':'')+(t.checks.includes('pattern')?'M/W ':'')+(t.checks.includes('level')?'Zona ':'');
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${new Date(t.datetime).toLocaleString('es-PY')}</td>
+      <td>${t.instrument}</td><td>${t.direction.split(' ')[0]}</td><td>${setup||'—'}</td>
+      <td>${t.sl}</td><td><span class="badge ${parseFloat(t.risk)<=1?'good':'bad'}">${t.risk}%</span></td>
+      <td>${t.volatility||'—'}</td><td>${t.emotion||'—'}</td>
+      <td><button class="danger" onclick="deleteTrade(${t.id})">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function deleteTrade(id){
+  if(!confirm('¿Eliminar esta entrada?'))return;
+  let data=JSON.parse(localStorage.getItem('trades')||'[]').filter(x=>x.id!==id);
+  localStorage.setItem('trades',JSON.stringify(data));renderHistory();
+}
+function clearHistory(){
+  if(confirm('¿Borrar TODO el historial? Esta acción no se puede deshacer.')){
+    localStorage.removeItem('trades');renderHistory();
+  }
+}
+function clearForm(){
+  document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);
+  document.querySelectorAll('input[type="radio"]').forEach(x=>x.checked=false);
+  $('sl').value='';$('risk').value='';$('notes').value='';$('datetime').value=nowLocal();
+  $('saveWarning').style.display='none';validate();
+}
+function exportData(){
+  const data=localStorage.getItem('trades')||'[]';
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='trader-checklist-historial.json';a.click();URL.revokeObjectURL(a.href);
+}
+renderHistory();
+</script>
+</body>
+</html>
