@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Trader Checklist</title>
+<style>
+:root{
+    --bg:#f3f4f6;
+    --card:#ffffff;
+    --text:#171717;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --accent:#22c55e;
+    --accent-dark:#15803d;
+    --accent-soft:#dcfce7;
+    --bar-bg:#e5e7eb;
+    --shadow:0 8px 30px rgba(0,0,0,.07);
+}
+body.dark{
+    --bg:#0b0f14;
+    --card:#121820;
+    --text:#f3f4f6;
+    --muted:#9ca3af;
+    --border:#26303b;
+    --accent:#39e75f;
+    --accent-dark:#22c55e;
+    --accent-soft:#12351e;
+    --bar-bg:#27313c;
+    --shadow:0 10px 35px rgba(0,0,0,.30);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Inter,Arial,Helvetica,sans-serif;
+    transition:.25s ease;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:28px 16px 60px;
+}
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+}
+.brand{
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--accent);
+}
+.theme-btn{
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    border-radius:999px;
+    padding:9px 14px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:700;
+}
+h1{
+    font-size:clamp(29px,5vw,43px);
+    line-height:1.05;
+    margin:0 0 13px;
+    letter-spacing:-1.5px;
+}
+.intro{
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.6;
+    max-width:780px;
+    margin-bottom:24px;
+}
+.progress-card{
+    position:sticky;
+    top:10px;
+    z-index:20;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    box-shadow:var(--shadow);
+    margin-bottom:18px;
+    backdrop-filter:blur(10px);
+}
+.progress-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+    font-weight:800;
+}
+.percent{color:var(--accent)}
+.bar{
+    height:11px;
+    width:100%;
+    background:var(--bar-bg);
+    border-radius:99px;
+    overflow:hidden;
+}
+.fill{
+    height:100%;
+    width:0;
+    background:var(--accent);
+    border-radius:99px;
+    transition:width .3s ease;
+}
+.status{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:8px;
+}
+.section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    margin:14px 0;
+    padding:18px;
+    box-shadow:var(--shadow);
+}
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-size:18px;
+    font-weight:850;
+    margin-bottom:9px;
+}
+.badge{
+    width:10px;
+    height:26px;
+    background:var(--accent);
+    border-radius:4px;
+}
+.check{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    padding:9px 4px;
+    cursor:pointer;
+    font-size:16px;
+    line-height:1.45;
+    user-select:none;
+}
+.check input{
+    appearance:none;
+    width:21px;
+    height:21px;
+    min-width:21px;
+    margin:1px 0 0;
+    border:2px solid #8b949e;
+    border-radius:5px;
+    background:transparent;
+    cursor:pointer;
+    position:relative;
+    transition:.15s;
+}
+.check input:checked{
+    background:var(--accent);
+    border-color:var(--accent);
+}
+.check input:checked::after{
+    content:"✓";
+    position:absolute;
+    color:#06100a;
+    font-weight:900;
+    font-size:15px;
+    left:3px;
+    top:-1px;
+}
+.check span{transition:.2s}
+.check input:checked + span{
+    text-decoration:line-through;
+    color:var(--muted);
+}
+.buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:20px;
+}
+button.action{
+    border:0;
+    border-radius:10px;
+    padding:12px 17px;
+    font-weight:800;
+    cursor:pointer;
+    background:var(--accent);
+    color:#06100a;
+}
+button.secondary{
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+}
+.complete{
+    display:none;
+    margin-top:14px;
+    padding:13px;
+    border-radius:10px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    text-align:center;
+    font-weight:800;
+}
+footer{
+    color:var(--muted);
+    text-align:center;
+    font-size:12px;
+    margin-top:30px;
+}
+@media(max-width:600px){
+    .container{padding:20px 11px 45px}
+    .section{padding:15px}
+    .check{font-size:15px}
+    .progress-card{top:5px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="topbar">
+        <div class="brand">Trading • Checklist</div>
+        <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 Oscuro</button>
+    </div>
+
+    <h1>Variables para ser un trader rentable</h1>
+    <div class="intro">
+        Esto es como armar un rompecabezas: tienes que hacer múltiples pruebas,
+        equivocarte, ajustar y repetir hasta descubrir exactamente qué funciona
+        y qué no dentro de tu operativa.
+    </div>
+
+    <div class="progress-card">
+        <div class="progress-head">
+            <span>Progreso general</span>
+            <span class="percent" id="percent">0%</span>
+        </div>
+        <div class="bar"><div class="fill" id="fill"></div></div>
+        <div class="status" id="status">0 de 30 objetivos completados</div>
+    </div>
+
+    <main id="checklist">
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Estrategia comprobada</div>
+            <label class="check"><input type="checkbox" data-id="tendencia"><span>Líneas de tendencia</span></label>
+            <label class="check"><input type="checkbox" data-id="macro"><span>Análisis macro hecho en el día</span></label>
+            <label class="check"><input type="checkbox" data-id="horario"><span>Horario para hacer trading</span></label>
+            <label class="check"><input type="checkbox" data-id="backtesting"><span>Backtesting hecho</span></label>
+            <label class="check"><input type="checkbox" data-id="demo"><span>Demo trading mínimo 1 mes o mínimo 15 trades</span></label>
+            <label class="check"><input type="checkbox" data-id="documentacion"><span>Documentación hecha en cada trade</span></label>
+        </section>
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Actividad física</div>
+            <label class="check"><input type="checkbox" data-id="movimiento"><span>Estás moviéndote activamente por lo menos dos veces al día</span></label>
+            <label class="check"><input type="checkbox" data-id="sentado"><span>Te quedas todo el día sentado</span></label>
+        </section>
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Entorno alineado</div>
+            <label class="check"><input type="checkbox" data-id="donde"><span>Dónde vives</span></label>
+            <label class="check"><input type="checkbox" data-id="escuchas"><span>A quién escuchas</span></label>
+            <label class="check"><input type="checkbox" data-id="lugares"><span>A qué lugares vas frecuentemente</span></label>
+            <label class="check"><input type="checkbox" data-id="mentor"><span>Tu mentor está alineado con tu visión de la vida</span></label>
+        </section>
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Finanzas</div>
+            <label class="check"><input type="checkbox" data-id="salario"><span>Tienes un salario? ¿Te gusta tu empleo?</span></label>
+            <label class="check"><input type="checkbox" data-id="cashflow"><span>Tienes cashflow mensual? ¿Te gusta tu negocio / freelance?</span></label>
+            <label class="check"><input type="checkbox" data-id="ahorros"><span>Tienes ahorros? “Colchón para el trading”</span></label>
+        </section>
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Relaciones personales</div>
+            <label class="check"><input type="checkbox" data-id="conflictos"><span>Tienes conflictos con las personas?</span></label>
+            <label class="check"><input type="checkbox" data-id="pareja"><span>Cómo va tu relación amorosa?</span></label>
+            <label class="check"><input type="checkbox" data-id="mientes"><span>Le mientes a tu pareja?</span></label>
+        </section>
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Comida</div>
+            <label class="check"><input type="checkbox" data-id="saludable"><span>Estás comiendo comida saludable?</span></label>
+            <label class="check"><input type="checkbox" data-id="exceso"><span>Estás comiendo en exceso o no comes?</span></label>
+            <label class="check"><input type="checkbox" data-id="agua"><span>Estás tomando suficiente agua durante el día?</span></label>
+        </section>
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Sueño</div>
+            <label class="check"><input type="checkbox" data-id="duermes"><span>Estás durmiendo lo suficiente?</span></label>
+            <label class="check"><input type="checkbox" data-id="cansancio"><span>Te sientes cansado al momento de hacer trading?</span></label>
+        </section>
+
+        <section class="section">
+            <div class="section-title"><span class="badge"></span>Disciplina de trading</div>
+            <label class="check"><input type="checkbox" data-id="plan"><span>Tienes un plan de trading definido?</span></label>
+            <label class="check"><input type="checkbox" data-id="riesgo"><span>Utilizas un riesgo fijo por operación?</span></label>
+            <label class="check"><input type="checkbox" data-id="stop"><span>Respetas siempre tu Stop Loss?</span></label>
+            <label class="check"><input type="checkbox" data-id="venganza"><span>Evitas el revenge trading?</span></label>
+            <label class="check"><input type="checkbox" data-id="fomo"><span>Evitas entrar por FOMO?</span></label>
+            <label class="check"><input type="checkbox" data-id="sobreoperar"><span>Evitas sobreoperar?</span></label>
+            <label class="check"><input type="checkbox" data-id="diario"><span>Llevas un diario de trading?</span></label>
+        </section>
+    </main>
+
+    <div class="buttons">
+        <button class="action" onclick="marcarTodo()">✓ Marcar todo</button>
+        <button class="action secondary" onclick="reiniciar()">↻ Reiniciar</button>
+    </div>
+
+    <div class="complete" id="complete">🎯 ¡Checklist completado! Revisaste todas las variables.</div>
+
+    <footer>Tu progreso se guarda automáticamente en este dispositivo.</footer>
+</div>
+
+<script>
+const checks = document.querySelectorAll('input[type="checkbox"]');
+const CHECK_KEY = 'trader_checklist_v2';
+const THEME_KEY = 'trader_theme_v1';
+
+function save(){
+    const state = {};
+    checks.forEach(c => state[c.dataset.id] = c.checked);
+    localStorage.setItem(CHECK_KEY, JSON.stringify(state));
+    update();
+}
+
+function load(){
+    try{
+        const state = JSON.parse(localStorage.getItem(CHECK_KEY) || '{}');
+        checks.forEach(c => c.checked = state[c.dataset.id] === true);
+    }catch(e){}
+    const theme = localStorage.getItem(THEME_KEY);
+    if(theme === 'dark') document.body.classList.add('dark');
+    updateThemeButton();
+    update();
+}
+
+function update(){
+    const total = checks.length;
+    const done = [...checks].filter(c => c.checked).length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    document.getElementById('percent').textContent = pct + '%';
+    document.getElementById('fill').style.width = pct + '%';
+    document.getElementById('status').textContent = `${done} de ${total} objetivos completados`;
+    document.getElementById('complete').style.display = pct === 100 ? 'block' : 'none';
+}
+
+function toggleTheme(){
+    document.body.classList.toggle('dark');
+    localStorage.setItem(THEME_KEY, document.body.classList.contains('dark') ? 'dark' : 'light');
+    updateThemeButton();
+}
+function updateThemeButton(){
+    const dark = document.body.classList.contains('dark');
+    document.getElementById('themeBtn').textContent = dark ? '☀️ Claro' : '🌙 Oscuro';
+}
+function marcarTodo(){
+    checks.forEach(c => c.checked = true);
+    save();
+}
+function reiniciar(){
+    if(!confirm('¿Seguro que quieres reiniciar todo el progreso?')) return;
+    checks.forEach(c => c.checked = false);
+    localStorage.removeItem(CHECK_KEY);
+    update();
+}
+checks.forEach(c => c.addEventListener('change', save));
+load();
+</script>
+</body>
+</html>
